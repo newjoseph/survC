@@ -1,0 +1,7 @@
+calc_risk_score         Compute risk scores from a fitted survival
+                        model
+cindex_calc             Calculate Harrell's C-index with 95% CI
+prepare_adpkd_dataset   Prepare ADPKD cohort data for survival
+                        modelling
+tdroc_calc              Calculate time-dependent ROC and AUC
+validation_report       Generate survival model validation report

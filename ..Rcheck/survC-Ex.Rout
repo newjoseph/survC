@@ -1,0 +1,123 @@
+
+R version 4.4.1 (2024-06-14) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "survC"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('survC')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("calc_risk_score")
+> ### * calc_risk_score
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: calc_risk_score
+> ### Title: Compute risk scores from a fitted survival model
+> ### Aliases: calc_risk_score
+> 
+> ### ** Examples
+> 
+> if (requireNamespace("survival", quietly = TRUE)) {
++   fit <- survival::coxph(survival::Surv(time, status) ~ age, data = survival::lung)
++   # Linear predictor on the training data
++   calc_risk_score(fit)
++ 
++   # Risk scale predictions on new data
++   calc_risk_score(fit, survival::lung, type = "risk")
++ }
+  [1] 1.2414342 1.1095408 0.8863035 0.9030515 0.9552185 1.2414342 1.1095408
+  [8] 1.1736362 0.8379001 0.9732688 0.9030515 1.1095408 1.1095408 0.9552185
+ [15] 0.9030515 1.0889632 1.1518699 1.0103991 0.8863035 0.9030515 1.0889632
+ [22] 0.7774491 0.7921401 0.9201160 1.1958138 1.1518699 0.9552185 1.1518699
+ [29] 0.8379001 1.2414342 1.1305073 1.2184105 0.7630305 0.9552185 0.9732688
+ [36] 0.9916602 1.0489459 1.0687673 1.2414342 1.0294921 1.1518699 1.2184105
+ [43] 0.9375030 0.9552185 1.1095408 1.2887950 1.2414342 1.0103991 1.2414342
+ [50] 0.7921401 1.1958138 1.0103991 1.1095408 0.9201160 0.9375030 0.9916602
+ [57] 1.0489459 0.9030515 0.9201160 1.0294921 1.2648930 0.7630305 1.2184105
+ [64] 1.0489459 1.1305073 1.1095408 1.0889632 1.0294921 1.1095408 1.0889632
+ [71] 1.0103991 0.7630305 1.2414342 0.6569031 0.8379001 1.1736362 0.8071088
+ [78] 0.8863035 1.4152534 1.2184105 0.9375030 0.8698660 0.6819640 0.7079810
+ [85] 0.7079810 1.1736362 0.9916602 0.9732688 0.7079810 1.1958138 1.0103991
+ [92] 1.1518699 1.0687673 0.9030515 1.1305073 1.1958138 1.1305073 1.1736362
+ [99] 1.0294921 1.1518699 0.9201160 1.1305073 0.8863035 1.0103991 0.9375030
+[106] 1.0687673 0.8537335 1.0889632 0.8698660 1.2648930 1.1305073 0.7079810
+[113] 1.3890060 1.2648930 0.8537335 1.2887950 0.7774491 1.1095408 1.0687673
+[120] 1.3890060 1.2648930 0.9552185 1.1305073 1.1958138 1.1518699 1.0687673
+[127] 0.7921401 1.0294921 1.3131487 0.7630305 0.9375030 0.8379001 0.7488793
+[134] 0.8698660 1.0889632 1.2414342 0.9201160 0.8863035 0.8537335 0.8863035
+[141] 1.2184105 1.2414342 1.2887950 1.0489459 0.9030515 0.8379001 1.1736362
+[148] 0.8537335 1.4419967 0.9375030 1.1518699 0.9552185 0.9916602 0.8379001
+[155] 0.8698660 1.1305073 1.1095408 0.9916602 1.0103991 0.8863035 0.9916602
+[162] 0.7079810 1.1305073 1.0103991 1.0294921 0.9030515 0.9552185 0.7349905
+[169] 0.9732688 1.0489459 0.9732688 0.9201160 0.8863035 0.6948507 0.8379001
+[176] 0.9375030 0.8863035 0.8698660 0.8379001 1.2414342 0.9552185 0.6447201
+[183] 1.0687673 1.0489459 0.8071088 0.7213593 1.1958138 0.9201160 1.0294921
+[190] 0.8379001 1.1958138 0.8223603 0.7921401 1.0294921 1.1736362 1.1518699
+[197] 1.0103991 1.0294921 0.8223603 0.9552185 1.0294921 1.2184105 1.0103991
+[204] 0.7921401 1.0103991 0.9916602 0.8698660 0.7921401 1.1305073 0.9375030
+[211] 0.9552185 1.0889632 1.1305073 1.0294921 1.0489459 1.0489459 0.6693163
+[218] 1.2887950 1.1518699 0.9030515 1.0889632 1.1736362 1.2887950 1.3131487
+[225] 0.6447201 1.2648930 1.0687673 0.9201160
+> 
+> 
+> 
+> cleanEx()
+> nameEx("cindex_calc")
+> ### * cindex_calc
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: cindex_calc
+> ### Title: Calculate Harrell's C-index with 95% CI
+> ### Aliases: cindex_calc
+> 
+> ### ** Examples
+> 
+> library(survival)
+> fit <- coxph(Surv(time, status) ~ age + sex, data = lung)
+> cindex_calc(fit)
+Cindex  Lower  Upper 
+ 0.603  0.553  0.653 
+> 
+> 
+> 
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+
+detaching ‘package:survival’
+
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.865 0.058 0.923 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

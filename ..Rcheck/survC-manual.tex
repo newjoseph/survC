@@ -1,0 +1,223 @@
+\nonstopmode{}
+\documentclass[letterpaper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\makeatletter\@ifl@t@r\fmtversion{2018/04/01}{}{\usepackage[utf8]{inputenc}}\makeatother
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `survC'}}
+\par\bigskip{\large \today}
+\end{center}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {survC: Survival Model Validation Utilities}}}{}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdfauthor = {Minhyuk Kim}}}{}
+\begin{description}
+\raggedright{}
+\item[Title]\AsIs{Survival Model Validation Utilities}
+\item[Version]\AsIs{0.1.0}
+\item[Author]\AsIs{Minhyuk Kim [aut, cre]}
+\item[Maintainer]\AsIs{Minhyuk Kim }\email{mhkim@zarathu.com}\AsIs{}
+\item[Description]\AsIs{Provides helper functions to compute linear predictors, time-dependent ROC curves,
+and Harrell's concordance index for Cox proportional hazards models, alongside
+data-preparation utilities for ADPKD validation workflows.}
+\item[Imports]\AsIs{survival, stats, timeROC, officer, rvg, data.table, readxl}
+\item[License]\AsIs{MIT + file LICENSE}
+\item[Encoding]\AsIs{UTF-8}
+\item[Roxygen]\AsIs{list(markdown = TRUE)}
+\item[RoxygenNote]\AsIs{7.3.2}
+\item[Suggests]\AsIs{magrittr, jstable, testthat (>= 3.0.0)}
+\item[Config/testthat/edition]\AsIs{3}
+\end{description}
+\Rdcontents{Contents}
+\HeaderA{calc\_risk\_score}{Compute risk scores from a fitted survival model}{calc.Rul.risk.Rul.score}
+%
+\begin{Description}
+This helper wraps \code{stats::predict()} for \code{coxph} objects so that package users
+can easily obtain linear predictors (default) or risk scores to feed into
+downstream metrics such as time-dependent ROC or Harrell's C-index.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+calc_risk_score(model, data = NULL, type = "lp", ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] A fitted \code{coxph} object.
+
+\item[\code{data}] Optional dataset on which to score the model. Defaults to the
+training data stored within \code{model}.
+
+\item[\code{type}] Scale of the predictions to return. Either \code{"lp"} (linear
+predictor, the default) or \code{"risk"}. If \code{NULL} or omitted, \code{"lp"} is used.
+
+\item[\code{...}] Additional arguments passed to \code{\LinkA{stats::predict()}{stats::predict()}}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A numeric vector containing the requested risk scores.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+if (requireNamespace("survival", quietly = TRUE)) {
+  fit <- survival::coxph(survival::Surv(time, status) ~ age, data = survival::lung)
+  # Linear predictor on the training data
+  calc_risk_score(fit)
+
+  # Risk scale predictions on new data
+  calc_risk_score(fit, survival::lung, type = "risk")
+}
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{cindex\_calc}{Calculate Harrell's C-index with 95\% CI}{cindex.Rul.calc}
+%
+\begin{Description}
+Calculate Harrell's C-index with 95\% CI
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+cindex_calc(model, newdata = NULL, digits = 3)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] a 'coxph' object
+
+\item[\code{newdata}] optional validation dataset
+
+\item[\code{digits}] number of decimal places for rounding (default 3).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+numeric vector of C-index (lower, upper)
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+library(survival)
+fit <- coxph(Surv(time, status) ~ age + sex, data = lung)
+cindex_calc(fit)
+
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{prepare\_adpkd\_dataset}{Prepare ADPKD cohort data for survival modelling}{prepare.Rul.adpkd.Rul.dataset}
+%
+\begin{Description}
+This helper reproduces the preprocessing pipeline that was previously in
+\code{temp.R}. It reads the baseline and follow-up Excel files, performs column
+harmonisation, derives follow-up times and laboratory summaries, and returns a
+cleaned dataset split into training and validation subsets.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+prepare_adpkd_dataset(
+  baseline_path,
+  followup_path,
+  followup_reference = as.Date("2025-08-01"),
+  train_size = 300,
+  seed = 123456L
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{baseline\_path}] Path to the baseline Excel file (sheet 1, skip = 1).
+
+\item[\code{followup\_path}] Path to the follow-up Excel file (sheet 1).
+
+\item[\code{followup\_reference}] Date used when the RRT start date is missing. Either
+a \code{Date} or something coercible via \code{\LinkA{as.Date()}{as.Date}}. Defaults to
+"2025-08-01".
+
+\item[\code{train\_size}] Number of subjects to sample into the training set. If this
+exceeds the number of rows it falls back to \code{nrow(data)}.
+
+\item[\code{seed}] Integer seed for the train/validation split (default \code{123456}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A list with elements \code{data} (cleaned dataset), \code{train}, \code{validation},
+\code{varlist}, and \code{labels} (if \code{jstable} is available). All datasets are
+returned as \code{data.table} objects.
+\end{Value}
+\HeaderA{tdroc\_calc}{Calculate time-dependent ROC and AUC}{tdroc.Rul.calc}
+%
+\begin{Description}
+Calculate time-dependent ROC and AUC
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tdroc_calc(time, status, marker, times)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{time}] Survival time vector
+
+\item[\code{status}] Event indicator (1 = event, 0 = censor)
+
+\item[\code{marker}] Risk score or linear predictor
+
+\item[\code{times}] Vector of time points (e.g., c(365, 730, 1095))
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A data.frame with AUCs for each time
+\end{Value}
+\HeaderA{validation\_report}{Generate survival model validation report}{validation.Rul.report}
+%
+\begin{Description}
+Generate survival model validation report
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+validation_report(
+  train_data,
+  val_data,
+  model,
+  times = c(365, 730, 1095),
+  time_unit = "days",
+  output = "validation_report.pptx"
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{train\_data}] training dataset containing survival outcomes.
+
+\item[\code{val\_data}] validation dataset containing survival outcomes.
+
+\item[\code{model}] fitted 'coxph'
+
+\item[\code{times}] follow-up timepoints
+
+\item[\code{time\_unit}] character label for the time axis (default = "days")
+
+\item[\code{output}] file path (.pptx or .html)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Writes validation report
+\end{Value}
+\printindex{}
+\end{document}

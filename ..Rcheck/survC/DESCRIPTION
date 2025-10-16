@@ -1,0 +1,19 @@
+Package: survC
+Title: Survival Model Validation Utilities
+Version: 0.1.0
+Authors@R: 
+    person("Minhyuk", "Kim", email = "mhkim@zarathu.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0000-8083-5099"))
+Author: Minhyuk Kim [aut, cre]
+Maintainer: Minhyuk Kim <mhkim@zarathu.com>
+Description: Provides helper functions to compute linear predictors, time-dependent ROC curves,
+    and Harrell's concordance index for Cox proportional hazards models, alongside
+    data-preparation utilities for ADPKD validation workflows.
+Imports: survival, stats, timeROC, officer, rvg, data.table, readxl
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: magrittr, jstable, testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Built: R 4.4.1; ; 2025-10-16 06:15:58 UTC; unix
