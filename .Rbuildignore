@@ -1,2 +1,6 @@
-^survC\.Rproj$
+^.*\.Rproj$
 ^\.Rproj\.user$
+^\.git$
+^\.gitignore$
+^\.Rhistory$
+^\.\.Rcheck$
