@@ -18,7 +18,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml)
-
+[![Coverage status](https://img.shields.io/badge/coverage-80.27%25-brightgreen.svg)](https://img.shields.io/badge/coverage-80.27%25-brightgreen.svg)
+[![Codecov test coverage](https://codecov.io/gh/newjoseph/survC/graph/badge.svg)](https://app.codecov.io/gh/newjoseph/survC)
 <!-- badges: end -->
 
 `survC` provides lightweight utilities for validating survival models. The package focuses on Cox regression workflows, wrapping common validation tasks such as extracting linear predictors, computing Harrell's concordance, and summarising time-dependent ROC curves. It also includes helpers for preparing cohort data and producing slide-based validation reports.
@@ -40,7 +41,6 @@ The examples below require the `survival`, `timeROC`, `officer`, and `rvg` packa
 -   Summarise time-dependent ROC curves across custom horizons via `tdroc_calc()` and inspect the underlying `timeROC` object.
 -   Compute Harrell's C-index (with a 95% confidence interval) for training or validation cohorts using `cindex_calc()`.
 -   Generate multi-slide PowerPoint reports that compare training and validation ROC curves at designated time points with `validation_report()`, specifying which columns contain survival times and event indicators.
--   Prepare Excel-based cohort extracts for downstream modelling with `prepare_adpkd_dataset()`.
 
 ## Quick start
 
