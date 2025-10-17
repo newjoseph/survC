@@ -116,6 +116,8 @@ validation_report(
   train_data = transform(train_df, ESRD_day = time, ESRD = as.integer(status == 2)),
   val_data = transform(val_df, ESRD_day = time, ESRD = as.integer(status == 2)),
   model = cox_fit,
+  time_col = "ESRD_day",
+  status_col = "ESRD",
   times = horizons,
   time_unit = "days",
   output = "validation_report.pptx"

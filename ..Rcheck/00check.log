@@ -6,6 +6,7 @@
     GNU Fortran (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
 * running under: Ubuntu 22.04.5 LTS
 * using session charset: UTF-8
+* using option ‘--no-manual’
 * checking for file ‘./DESCRIPTION’ ... OK
 * this is package ‘survC’ version ‘0.1.0’
 * package encoding: UTF-8
@@ -16,10 +17,13 @@
 * checking for executable files ... OK
 * checking for hidden files and directories ... NOTE
 Found the following hidden files and directories:
+  .Rhistory
+  .github/.gitignore
   .gitignore
   ..Rcheck
   .Rproj.user
   .git
+  .github
 These were most likely included in error. See section ‘Package
 structure’ in the ‘Writing R Extensions’ manual.
 * checking for portable file names ... OK
@@ -28,7 +32,6 @@ structure’ in the ‘Writing R Extensions’ manual.
 * checking installed package size ... OK
 * checking package directory ... OK
 * checking DESCRIPTION meta-information ... NOTE
-License stub is invalid DCF.
 Checking should be performed on sources prepared by ‘R CMD build’.
 * checking top-level files ... OK
 * checking for left-over files ... OK
@@ -62,10 +65,5 @@ Most likely, these were included erroneously.
 * checking for unstated dependencies in ‘tests’ ... OK
 * checking tests ... OK
   Running ‘testthat.R’
-* checking PDF version of manual ... WARNING
-LaTeX errors when creating PDF version.
-This typically indicates Rd problems.
-* checking PDF version of manual without index ... ERROR
-Re-running with no redirection of stdout/stderr.
 * DONE
-Status: 1 ERROR, 2 WARNINGs, 2 NOTEs
+Status: 1 WARNING, 2 NOTEs

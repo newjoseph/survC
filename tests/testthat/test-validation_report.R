@@ -39,6 +39,8 @@ test_that("validation_report creates a PPTX with one slide per time point", {
     train_data = train_df,
     val_data = val_df,
     model = model,
+    time_col = "ESRD_day",
+    status_col = "ESRD",
     times = target_times,
     time_unit = time_unit,
     output = output_path

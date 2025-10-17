@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `survC` provides lightweight utilities for validating survival models.
@@ -31,7 +32,7 @@ automatically when `survC` is installed.
 
 - Convert fitted `coxph` models into linear predictors or risk scores
   with `calc_risk_score()` for downstream metrics.
-- Summarize time-dependent ROC curves across custom horizons via
+- Summarise time-dependent ROC curves across custom horizons via
   `tdroc_calc()` and inspect the underlying `timeROC` object.
 - Compute Harrell’s C-index (with a 95% confidence interval) for
   training or validation cohorts using `cindex_calc()`.
@@ -139,7 +140,7 @@ str(attr(roc_tbl, "roc_obj"))
 #>   .. ..$ upper                : num [1:83] 1 1 1 1 1 1 1 1 1 1 ...
 #>   .. ..$ call                 : language prodlim::prodlim(formula = formula, data = data, reverse = TRUE)
 #>   .. ..$ formula              :Class 'formula'  language Surv(failure_time, status) ~ 1
-#>   .. .. .. ..- attr(*, ".Environment")=<environment: 0x5592e22a7c38> 
+#>   .. .. .. ..- attr(*, ".Environment")=<environment: 0x56261d918d98> 
 #>   .. ..$ model.response       : 'Hist' num [1:90, 1:2] 5 13 30 53 60 61 62 65 79 81 ...
 #>   .. .. ..- attr(*, "dimnames")=List of 2
 #>   .. .. .. ..$ : chr [1:90] "1" "2" "3" "4" ...
@@ -178,9 +179,9 @@ str(attr(roc_tbl, "roc_obj"))
 #>   .. ..- attr(*, "names")= chr [1:2] "t=200" "t=400"
 #>   ..$ vect_sd_2         : Named logi [1:2] NA NA
 #>   .. ..- attr(*, "names")= chr [1:2] "t=200" "t=400"
-#>   ..$ vect_iid_comp_time: Named num [1:2] 0.003 0.00331
+#>   ..$ vect_iid_comp_time: Named num [1:2] 0.00299 0.00297
 #>   .. ..- attr(*, "names")= chr [1:2] "t=200" "t=400"
-#>  $ computation_time   : 'difftime' num 0.0151829719543457
+#>  $ computation_time   : 'difftime' num 0.0150535106658936
 #>   ..- attr(*, "units")= chr "secs"
 #>  $ iid                : logi TRUE
 #>  - attr(*, "class")= chr [1:2] "timeROC" "ipcwsurvivalROC"
@@ -197,6 +198,8 @@ validation_report(
   train_data = transform(train_df, ESRD_day = time, ESRD = as.integer(status == 2)),
   val_data = transform(val_df, ESRD_day = time, ESRD = as.integer(status == 2)),
   model = cox_fit,
+  time_col = "ESRD_day",
+  status_col = "ESRD",
   times = horizons,
   time_unit = "days",
   output = "validation_report.pptx"

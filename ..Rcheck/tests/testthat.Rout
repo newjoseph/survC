@@ -26,8 +26,8 @@ The following object is masked from 'package:testthat':
 
     compare
 
-[ FAIL 0 | WARN 0 | SKIP 0 | PASS 28 ]
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 33 ]
 > 
 > proc.time()
    user  system elapsed 
-  3.115   6.451   2.179 
+  3.180   6.412   2.207 

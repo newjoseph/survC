@@ -8,6 +8,8 @@ validation_report(
   train_data,
   val_data,
   model,
+  time_col,
+  status_col,
   times = c(365, 730, 1095),
   time_unit = "days",
   output = "validation_report.pptx"
@@ -19,6 +21,10 @@ validation_report(
 \item{val_data}{validation dataset containing survival outcomes.}
 
 \item{model}{fitted 'coxph'}
+
+\item{time_col}{name of the survival time column present in both datasets}
+
+\item{status_col}{name of the event indicator column present in both datasets}
 
 \item{times}{follow-up timepoints}
 
