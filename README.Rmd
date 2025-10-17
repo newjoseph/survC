@@ -1,0 +1,133 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# survC
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+`survC` provides lightweight utilities for validating survival models. The
+package focuses on Cox regression workflows, wrapping common validation tasks
+such as extracting linear predictors, computing Harrell's concordance, and
+summarising time-dependent ROC curves. It also includes helpers for preparing
+cohort data and producing slide-based validation reports.
+
+## Installation
+
+Install the development version of `survC` from GitHub with:
+
+``` r
+# install.packages("pak")
+pak::pak("newjoseph/survC")
+```
+
+The examples below require the `survival`, `timeROC`, `officer`, and `rvg`
+packages. They are listed in `Imports` and will be pulled in automatically when
+`survC` is installed.
+
+## Key features
+
+- Convert fitted `coxph` models into linear predictors or risk scores with
+  `calc_risk_score()` for downstream metrics.
+- Summarise time-dependent ROC curves across custom horizons via `tdroc_calc()`
+  and inspect the underlying `timeROC` object.
+- Compute Harrell's C-index (with a 95% confidence interval) for training or
+  validation cohorts using `cindex_calc()`.
+- Generate multi-slide PowerPoint reports that compare training and validation
+  ROC curves at designated time points with `validation_report()`.
+- Prepare Excel-based cohort extracts for downstream modelling with
+  `prepare_adpkd_dataset()`.
+
+## Quick start
+
+The example below demonstrates a typical validation workflow using the
+`survival::lung` dataset.
+
+```{r quick-start, message = FALSE}
+library(survC)
+library(survival)
+
+set.seed(2024)
+lung <- survival::lung
+lung <- lung[complete.cases(lung[, c("time", "status", "age", "ph.ecog")]), ]
+
+# Split into training and validation cohorts
+split_ids <- sample(seq_len(nrow(lung)))
+train_idx <- split_ids[1:110]
+val_idx <- split_ids[111:200]
+
+train_df <- lung[train_idx, ]
+val_df <- lung[val_idx, ]
+
+# Fit a simple Cox model on the training data
+cox_fit <- survival::coxph(
+  survival::Surv(time, status == 2) ~ age + ph.ecog,
+  data = train_df,
+  x = TRUE
+)
+
+# 1. Linear predictor / risk scores
+train_lp <- calc_risk_score(cox_fit)
+val_lp <- calc_risk_score(cox_fit, data = val_df)
+
+# 2. Harrell's concordance on the validation cohort
+c_index_val <- cindex_calc(cox_fit, newdata = val_df)
+c_index_val
+
+# 3. Time-dependent ROC summary at selected horizons
+horizons <- c(200, 400)
+roc_tbl <- tdroc_calc(
+  time = val_df$time,
+  status = as.integer(val_df$status == 2),
+  marker = val_lp,
+  times = horizons
+)
+roc_tbl
+```
+
+The returned AUC table mirrors `timeROC` output and carries the full ROC object
+as the `roc_obj` attribute for plotting or inspection:
+
+```{r roc-structure}
+str(attr(roc_tbl, "roc_obj"))
+```
+
+### Validation report (PowerPoint)
+
+Use `validation_report()` to export one slide per horizon with training and
+validation ROC curves side-by-side. The function relies on `officer` and `rvg`
+so plots remain editable.
+
+```{r validation-report, eval = FALSE}
+validation_report(
+  train_data = transform(train_df, ESRD_day = time, ESRD = as.integer(status == 2)),
+  val_data = transform(val_df, ESRD_day = time, ESRD = as.integer(status == 2)),
+  model = cox_fit,
+  times = horizons,
+  time_unit = "days",
+  output = "validation_report.pptx"
+)
+```
+
+## Development
+
+Re-knit the README after editing with:
+
+``` r
+devtools::build_readme()
+```
+
+This regenerates `README.md` so GitHub reflects the latest examples.
