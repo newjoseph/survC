@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml)
+
 <!-- badges: end -->
 
 `survC` provides lightweight utilities for validating survival models.
@@ -38,7 +39,8 @@ automatically when `survC` is installed.
   training or validation cohorts using `cindex_calc()`.
 - Generate multi-slide PowerPoint reports that compare training and
   validation ROC curves at designated time points with
-  `validation_report()`.
+  `validation_report()`, specifying which columns contain survival times
+  and event indicators.
 - Prepare Excel-based cohort extracts for downstream modelling with
   `prepare_adpkd_dataset()`.
 
@@ -98,108 +100,33 @@ The returned AUC table mirrors `timeROC` output and carries the full ROC
 object as the `roc_obj` attribute for plotting or inspection:
 
 ``` r
-str(attr(roc_tbl, "roc_obj"))
-#> List of 12
-#>  $ TP                 : num [1:53, 1:2] 0 0 0.0319 0.0319 0.0628 ...
-#>   ..- attr(*, "dimnames")=List of 2
-#>   .. ..$ : NULL
-#>   .. ..$ : chr [1:2] "t=200" "t=400"
-#>  $ FP                 : num [1:53, 1:2] 0 0.0185 0.0185 0.037 0.037 ...
-#>   ..- attr(*, "dimnames")=List of 2
-#>   .. ..$ : NULL
-#>   .. ..$ : chr [1:2] "t=200" "t=400"
-#>  $ AUC                : Named num [1:2] 0.598 0.505
-#>   ..- attr(*, "names")= chr [1:2] "t=200" "t=400"
-#>  $ times              : num [1:2] 200 400
-#>  $ CumulativeIncidence: Named num [1:2] 0.359 0.666
-#>   ..- attr(*, "names")= chr [1:2] "t=200" "t=400"
-#>  $ survProb           : Named num [1:2] 0.641 0.334
-#>   ..- attr(*, "names")= chr [1:2] "t=200" "t=400"
-#>  $ n                  : int 90
-#>  $ Stats              : int [1:2, 1:3] 32 54 54 21 4 15
-#>   ..- attr(*, "dimnames")=List of 2
-#>   .. ..$ : chr [1:2] "t=200" "t=400"
-#>   .. ..$ : chr [1:3] "Cases" "survivor at t" "Censored at t"
-#>  $ weights            :List of 6
-#>   ..$ times            : num [1:2] 200 400
-#>   ..$ IPCW.times       : num [1:2] 0.936 0.7
-#>   ..$ IPCW.subjectTimes: num [1:90] 1 1 1 1 1 1 1 1 1 1 ...
-#>   ..$ fit              :List of 29
-#>   .. ..$ time                 : num [1:83] 5 13 30 53 60 61 62 65 79 81 ...
-#>   .. ..$ n.risk               : num [1:83] 90 89 88 87 86 85 84 83 82 81 ...
-#>   .. ..$ n.event              : num [1:83] 1 1 1 1 1 1 1 1 1 2 ...
-#>   .. ..$ n.lost               : num [1:83] 0 0 0 0 0 0 0 0 0 0 ...
-#>   .. ..$ surv                 : num [1:83] 1 1 1 1 1 1 1 1 1 1 ...
-#>   .. ..$ se.surv              : num [1:83] 0 0 0 0 0 0 0 0 0 0 ...
-#>   .. ..$ hazard               : num [1:83] 0 0 0 0 0 0 0 0 0 0 ...
-#>   .. ..$ first.strata         : int 1
-#>   .. ..$ size.strata          : int 83
-#>   .. ..$ model                : chr "survival"
-#>   .. ..$ maxtime              : num 840
-#>   .. ..$ lower                : num [1:83] 0 0 0 0 0 0 0 0 0 0 ...
-#>   .. ..$ upper                : num [1:83] 1 1 1 1 1 1 1 1 1 1 ...
-#>   .. ..$ call                 : language prodlim::prodlim(formula = formula, data = data, reverse = TRUE)
-#>   .. ..$ formula              :Class 'formula'  language Surv(failure_time, status) ~ 1
-#>   .. .. .. ..- attr(*, ".Environment")=<environment: 0x56261d918d98> 
-#>   .. ..$ model.response       : 'Hist' num [1:90, 1:2] 5 13 30 53 60 61 62 65 79 81 ...
-#>   .. .. ..- attr(*, "dimnames")=List of 2
-#>   .. .. .. ..$ : chr [1:90] "1" "2" "3" "4" ...
-#>   .. .. .. ..$ : chr [1:2] "time" "status"
-#>   .. .. ..- attr(*, "model")= chr "survival"
-#>   .. .. ..- attr(*, "cens.type")= chr "rightCensored"
-#>   .. .. ..- attr(*, "cens.code")= num 0
-#>   .. .. ..- attr(*, "entry.type")= chr ""
-#>   .. ..$ originalDataOrder    : int [1:90] 1 2 3 4 5 6 7 8 9 10 ...
-#>   .. ..$ X                    : NULL
-#>   .. ..$ model.matrix         : NULL
-#>   .. ..$ discrete.predictors  : NULL
-#>   .. ..$ continuous.predictors: NULL
-#>   .. ..$ xlevels              : NULL
-#>   .. ..$ clustervar           : NULL
-#>   .. ..$ covariate.type       : num 1
-#>   .. ..$ cens.type            : chr "rightCensored"
-#>   .. ..$ conf.int             : num 0.95
-#>   .. ..$ reverse              : logi TRUE
-#>   .. ..$ type                 : chr "risk"
-#>   .. ..$ na.action            : NULL
-#>   .. ..- attr(*, "class")= chr "prodlim"
-#>   ..$ call             : language ipcw.marginal(formula = Surv(failure_time, status) ~ 1, data = data.frame(failure_time = T,      status = as.nume| __truncated__ ...
-#>   ..$ method           : chr "marginal"
-#>   ..- attr(*, "class")= chr "IPCW"
-#>  $ inference          :List of 5
-#>   ..$ mat_iid_rep_2     : logi [1:90, 1:2] NA NA NA NA NA NA ...
-#>   .. ..- attr(*, "dimnames")=List of 2
-#>   .. .. ..$ : NULL
-#>   .. .. ..$ : chr [1:2] "t=200" "t=400"
-#>   ..$ mat_iid_rep_1     : num [1:90, 1:2] -1.2273 0.0103 1.0157 -1.1499 -0.0671 ...
-#>   .. ..- attr(*, "dimnames")=List of 2
-#>   .. .. ..$ : NULL
-#>   .. .. ..$ : chr [1:2] "t=200" "t=400"
-#>   ..$ vect_sd_1         : Named num [1:2] 0.0638 0.0745
-#>   .. ..- attr(*, "names")= chr [1:2] "t=200" "t=400"
-#>   ..$ vect_sd_2         : Named logi [1:2] NA NA
-#>   .. ..- attr(*, "names")= chr [1:2] "t=200" "t=400"
-#>   ..$ vect_iid_comp_time: Named num [1:2] 0.00299 0.00297
-#>   .. ..- attr(*, "names")= chr [1:2] "t=200" "t=400"
-#>  $ computation_time   : 'difftime' num 0.0150535106658936
-#>   ..- attr(*, "units")= chr "secs"
-#>  $ iid                : logi TRUE
-#>  - attr(*, "class")= chr [1:2] "timeROC" "ipcwsurvivalROC"
+roc_obj <- attr(roc_tbl, "roc_obj")
+list(
+  AUC = roc_obj$AUC,
+  times = roc_obj$times
+)
+#> $AUC
+#>     t=200     t=400 
+#> 0.5981693 0.5054571 
+#> 
+#> $times
+#> [1] 200 400
 ```
 
 ### Validation report (PowerPoint)
 
 Use `validation_report()` to export one slide per horizon with training
-and validation ROC curves side-by-side. The function relies on `officer`
-and `rvg` so plots remain editable.
+and validation ROC curves side-by-side. Pass the column names that hold
+follow-up times and event indicators via `time_col` and `status_col`.
+The function relies on `officer` and `rvg` so plots remain editable.
 
 ``` r
 validation_report(
-  train_data = transform(train_df, ESRD_day = time, ESRD = as.integer(status == 2)),
-  val_data = transform(val_df, ESRD_day = time, ESRD = as.integer(status == 2)),
+  train_data = transform(train_df, time = time, status = as.integer(status == 2)),
+  val_data = transform(val_df, time = time, status = as.integer(status == 2)),
   model = cox_fit,
-  time_col = "ESRD_day",
-  status_col = "ESRD",
+  time_col = "time",
+  status_col = "status",
   times = horizons,
   time_unit = "days",
   output = "validation_report.pptx"
