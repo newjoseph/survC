@@ -1,0 +1,8 @@
+pandoc: '3.3'
+pkgdown: 2.1.0
+pkgdown_sha: ~
+articles: {}
+last_built: 2025-10-17T03:03Z
+urls:
+  reference: https://newjoseph.github.io/survC/reference
+  article: https://newjoseph.github.io/survC/articles
