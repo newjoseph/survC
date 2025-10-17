@@ -6,7 +6,10 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/newjoseph/survC/actions/workflows/R-CMD-check.yaml)
-
+[![Coverage
+status](https://img.shields.io/badge/coverage-80.27%25-brightgreen.svg)](https://img.shields.io/badge/coverage-80.27%25-brightgreen.svg)
+[![Codecov test
+coverage](https://codecov.io/gh/newjoseph/survC/graph/badge.svg)](https://app.codecov.io/gh/newjoseph/survC)
 <!-- badges: end -->
 
 `survC` provides lightweight utilities for validating survival models.
@@ -41,8 +44,6 @@ automatically when `survC` is installed.
   validation ROC curves at designated time points with
   `validation_report()`, specifying which columns contain survival times
   and event indicators.
-- Prepare Excel-based cohort extracts for downstream modelling with
-  `prepare_adpkd_dataset()`.
 
 ## Quick start
 

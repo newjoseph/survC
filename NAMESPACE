@@ -2,7 +2,6 @@
 
 export(calc_risk_score)
 export(cindex_calc)
-export(prepare_adpkd_dataset)
 export(tdroc_calc)
 export(validation_report)
 import(data.table)
