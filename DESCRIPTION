@@ -7,8 +7,7 @@ Authors@R:
 Author: Minhyuk Kim [aut, cre]
 Maintainer: Minhyuk Kim <mhkim@zarathu.com>
 Description: Provides helper functions to compute linear predictors, time-dependent ROC curves,
-    and Harrell's concordance index for Cox proportional hazards models, alongside
-    data-preparation utilities for ADPKD validation workflows.
+    and Harrell's concordance index for Cox proportional hazards models.
 Imports:
     survival,
     stats,
